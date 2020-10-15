@@ -3,8 +3,8 @@ function ADGrpMem {
         $group
     )
     
-    Get-ADGroupMember -Identity $group | ft name
+    Get-ADGroupMember -Identity $group | formattable name
 
 }
 
-ADGrpMem(<GROUP>)
+ADGrpMem('GBLFinance')

@@ -1,26 +1,16 @@
-# from pil import Image
+from PIL import Image
 import pytesseract
 import sys
-from pdf2image import convert_from_path
 import os
+import logging
+import time
+from watchdog.observers import Observer
 
-# PDF_file = 'test.pdf'
+def image_ocr_pdf(file):
+    print(os.path.splitext(file))
+    f = open('test.txt', 'a')
+    text = pytesseract.image_to_string(Image.open(file))
+    f.write(text)
+    f.close()
 
-# page = convert_from_path(PDF_file)
-
-# for page in pages:
-#     filename = 'Page1.jpg'
-#     page.save(filename, 'JPEG') 
-
-# outfile = "out.txt"
-
-# f = open(outfile, 'a')
-
-# filename = 'Page1.jpg'
-
-# text = str(((pytesseract.image_to_string(Image.open(filename)))))
-
-# f.write(text)
-
-# f.close()
-
+image_ocr_pdf('Test.png')
