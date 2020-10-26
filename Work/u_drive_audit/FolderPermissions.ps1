@@ -1,4 +1,7 @@
-param([string]$path)
+param(
+    [string]    $path,
+    [string]    $expand_groups = 'false'
+)
 
 function GetPermissions {
     param (
@@ -27,7 +30,7 @@ function strip {
     param (
         $var
     )
-    $var = $var -replace " ", ""
+    $var = $var.Trim()
     $var = $var -replace "\n", ""
     $var
 }
@@ -53,11 +56,21 @@ for ($i = 0; $i -lt ($permitted.Length - 1); $i++) {
         }
         else {
             if (((Get-ADGroup -Identity (strip($permitted[$i]))).groupscope) -like 'global') {
-                $permitted[$i]
-                "_____________"
-                ADGrpMem(strip($permitted[$i]))
-                "_____________"
-
+                $generic = @('domain users', 'everyone')
+                if ($expand_groups -like 'all') {
+                    $permitted[$i]
+                    "_____________"
+                    ADGrpMem(strip($permitted[$i]))
+                    " "
+                } elseif ($expand_groups -like 'true' -and (-not ($generic -contains (strip($permitted[$i]))))) {
+                    $permitted[$i]
+                    "_____________"
+                    ADGrpMem(strip($permitted[$i]))
+                    " "
+                }
+                else {
+                    $permitted[$i]
+                }
             }
         }
     }
