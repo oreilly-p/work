@@ -3,6 +3,7 @@ param(
     [string]    $expand_groups = 'false'
 )
 
+
 function GetPermissions {
     param (
         $path
@@ -12,10 +13,7 @@ function GetPermissions {
     $raw_permissions = $raw_permissions -split "`r`n"
     $raw_permissions[3..($raw_permissions.Length - 1)]
 }
-
-$permitted = GetPermissions($path)
-
-
+ 
 function IsUserOrGroup {
     param (
         $SamName
@@ -49,6 +47,8 @@ function ADGrpMem {
     Get-ADGroupMember -Identity $group | ForEach-Object { $_.name } 
 }
 
+$permitted = GetPermissions($path)
+
 for ($i = 0; $i -lt ($permitted.Length - 1); $i++) {
     if (IsUserOrGroup($permitted[$i])) {
         if ((IsUserOrGroup($permitted[$i])) -like 'user') {
@@ -62,7 +62,8 @@ for ($i = 0; $i -lt ($permitted.Length - 1); $i++) {
                     "_____________"
                     ADGrpMem(strip($permitted[$i]))
                     " "
-                } elseif ($expand_groups -like 'true' -and (-not ($generic -contains (strip($permitted[$i]))))) {
+                }
+                elseif ($expand_groups -like 'true' -and (-not ($generic -contains (strip($permitted[$i]))))) {
                     $permitted[$i]
                     "_____________"
                     ADGrpMem(strip($permitted[$i]))
